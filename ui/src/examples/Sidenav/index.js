@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 // react-router-dom components
-import { useLocation, NavLink } from "react-router-dom";
+import { useLocation, NavLink, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -25,6 +25,7 @@ import SidenavCollapse from "examples/Sidenav/SidenavCollapse";
 // Custom styles for the Sidenav
 import SidenavRoot from "examples/Sidenav/SidenavRoot";
 import sidenavLogoLabel from "examples/Sidenav/styles/sidenav";
+import { useAuth } from "context/AuthProvider";
 
 // Material Dashboard 2 React context
 import {
@@ -39,6 +40,8 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode, sidenavColor } = controller;
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
+  const {currentUser, signout} = useAuth();
+  const navigate = useNavigate();
 
   let textColor = "white";
 
@@ -49,6 +52,16 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   }
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
+  useEffect(() => {
+    if(!currentUser){
+      navigate("/authentication/sign-in")
+    }
+    if(currentUser){
+      navigate("/dashboard")
+    }
+  }, [currentUser]);
+
+
 
   useEffect(() => {
     // A function that sets the mini state of the sidenav.
@@ -73,6 +86,23 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
   const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
     let returnValue;
+    if (currentUser && name === "Sign In") {
+      return ( <Link
+        onClick={signout}
+        key={key}
+        target="_blank"
+        rel="noreferrer"
+        sx={{ textDecoration: "none" }}
+      >
+        <SidenavCollapse
+          name="Sign Out"
+          icon={icon}
+          active={key === collapseName}
+          noCollapse={noCollapse}
+        />
+      </Link>);
+    }
+    
 
     if (type === "collapse") {
       returnValue = href ? (

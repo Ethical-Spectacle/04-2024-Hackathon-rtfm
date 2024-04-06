@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 
 // react-router components
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
@@ -38,8 +38,11 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 import brandWhite from "assets/images/1713680.webp";
 import brandDark from "assets/images/1713680.webp";
 
+import { useAuth } from "context/AuthProvider";
+
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
+  const navigate = useNavigate();
   const {
     miniSidenav,
     direction,
@@ -53,6 +56,15 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    if (currentUser) {
+      console.log("User is logged in");
+      navigate("/dashboard");
+    }
+  }
+  , [currentUser]);
 
   // Cache for the rtl
   useMemo(() => {
@@ -153,6 +165,7 @@ export default function App() {
         <Routes>
           {getRoutes(routes)}
           <Route path="*" element={<Navigate to="/dashboard" />} />
+          {/* <Route path="/login" element={<Navigate to="/signin" />} /> */}
         </Routes>
       </ThemeProvider>
     </CacheProvider>
@@ -176,7 +189,7 @@ export default function App() {
       {layout === "vr" && <Configurator />}
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/authentication/sign-in" />} />
       </Routes>
     </ThemeProvider>
   );

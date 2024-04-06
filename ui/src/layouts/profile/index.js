@@ -81,7 +81,7 @@ function Overview() {
                 shadow={false}
               />
               <Divider orientation="vertical" sx={{ mx: 0 }} />
-            </Grid>
+            {/* </Grid>
             <Grid item xs={12} xl={4}>
               <ProfilesList title="conversations" profiles={profilesListData} shadow={false} />
             </Grid>
@@ -177,12 +177,12 @@ function Overview() {
                   { image: team2, name: "Ryan Milly" },
                   { image: team1, name: "Elena Morison" },
                 ]}
-              />
+              /> */}
             </Grid>
           </Grid>
         </MDBox>
       </Header>
-      <Footer />
+      {/* <Footer /> */}
     </DashboardLayout>
   );
 }

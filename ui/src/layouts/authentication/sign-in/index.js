@@ -1,6 +1,6 @@
 
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -21,6 +21,9 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "context/AuthProvider";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
@@ -31,11 +34,21 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
 
+  const { signUpWithGoogle, currentUser } = useAuth();
+  console.log(currentUser);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (currentUser) {
+      console.log("User is logged in");
+      navigate("/dashboard");
+    }
+  }, [currentUser]);
+
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   return (
-    <BasicLayout image={bgImage}>
-      <Card>
+    <BasicLayout>
+      {/* <Card> */}
         <MDBox
           variant="gradient"
           bgColor="info"
@@ -51,24 +64,24 @@ function Basic() {
             Sign in
           </MDTypography>
           <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-            <Grid item xs={2}>
+            {/* <Grid item xs={2}>
               <MDTypography component={MuiLink} href="#" variant="body1" color="white">
                 <FacebookIcon color="inherit" />
               </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
+            </Grid> */}
+            {/* <Grid item xs={2}>
               <MDTypography component={MuiLink} href="#" variant="body1" color="white">
                 <GitHubIcon color="inherit" />
               </MDTypography>
-            </Grid>
+            </Grid> */}
             <Grid item xs={2}>
               <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GoogleIcon color="inherit" />
+                <GoogleIcon color="inherit" onClick={signUpWithGoogle} />
               </MDTypography>
             </Grid>
           </Grid>
         </MDBox>
-        <MDBox pt={4} pb={3} px={3}>
+        {/* <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <MDInput type="email" label="Email" fullWidth />
@@ -109,8 +122,8 @@ function Basic() {
               </MDTypography>
             </MDBox>
           </MDBox>
-        </MDBox>
-      </Card>
+        </MDBox> */}
+      {/* </Card> */}
     </BasicLayout>
   );
 }
