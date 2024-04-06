@@ -1,1 +1,0 @@
-# 04-2024-Hackathon-rtfm
