@@ -67,7 +67,7 @@ function Dashboard() {
           'AIR_INTAKE_TEMP',
           'SPEED',
           'THROTTLE_POS',
-          'Efficiency'
+          'EFFICIENCY'
           // Add more parameters as needed
         ];
         const transformedData = {}
@@ -107,7 +107,7 @@ function Dashboard() {
       'AIR_INTAKE_TEMP',
       'SPEED',
       'THROTTLE_POS',
-      'Efficiency'
+      'EFFICIENCY'
       // Add more parameters as needed
     ];
 
@@ -237,7 +237,7 @@ function Dashboard() {
                   title="Efficiency"
                   description="Efficiency stats for last month."
                   date="updated 1hr ago"
-                  chart={newChartData['Efficiency']}
+                  chart={newChartData['EFFICIENCY']}
                 />
               </MDBox>
             </Grid>
