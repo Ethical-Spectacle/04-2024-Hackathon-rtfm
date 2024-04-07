@@ -98,14 +98,14 @@ def get_efficiency_data():
 
     carbonPoints=0
     if (10<=mean_efficiency<=40):
-        carbonPoints = 10
+        carbonPoints = 10 * 10
     elif(41<=mean_efficiency<=60):
-        carbonPoints = 20
+        carbonPoints = 20 * 12
     elif(61<=mean_efficiency<90):
-        carbonPoints = 30
-    else:carbonPoints = 40
+        carbonPoints = 30 * 12
+    else:carbonPoints = 40 * 12
     
-    resultData=[{"CARBONPOINTS":carbonPoints+20}]
+    resultData=[{"CARBONPOINTS":carbonPoints+100,"MEANEFFICIENCY":mean_efficiency}]
     # efficiency = data[0]
     # Return the data as JSON
     return jsonify(resultData)
