@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -7,7 +7,6 @@ import Grid from "@mui/material/Grid";
 import MDBox from "components/MDBox";
 import Slider from "@mui/material/Slider";
 // import { Line } from 'react-chartjs-2';
-
 
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -46,44 +45,48 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(process.env.REACT_APP_BACKEND_URL+'get_data/'+numberOfDays);
+        const response = await fetch(
+          process.env.REACT_APP_BACKEND_URL + "get_data/" + numberOfDays
+        );
         const jsonData = await response.json();
 
         // Extract chart datasets for all available parameters
         const datasets = extractChartDatasets(jsonData);
         const parameters = [
-          'ENGINE_COOLANT_TEMP',
-          'ENGINE_LOAD',
-          'ENGINE_RPM',
-          'AIR_INTAKE_TEMP',
-          'SPEED',
-          'THROTTLE_POS',
-          'EFFICIENCY'
+          "ENGINE_COOLANT_TEMP",
+          "ENGINE_LOAD",
+          "ENGINE_RPM",
+          "AIR_INTAKE_TEMP",
+          "SPEED",
+          "THROTTLE_POS",
+          "EFFICIENCY",
           // Add more parameters as needed
         ];
-        const transformedData = {}
-        for(let i=0;i<parameters.length;i++){
-          Object.keys(datasets).forEach(param => {
+        const transformedData = {};
+        for (let i = 0; i < parameters.length; i++) {
+          Object.keys(datasets).forEach((param) => {
             // console.log("param",param);
-            const label = param
+            const label = param;
             const data = datasets[param].data;
             // console.log("data",data);
-            const labels = datasets[param].data.map((_, index) => `Day-#${index+1}`);
+            const labels = datasets[param].data.map(
+              (_, index) => `Day-#${index + 1}`
+            );
             const dataset = {
               label: label,
-              data: data
+              data: data,
             };
             transformedData[label] = {
               labels: labels,
-              datasets: dataset
-            }
+              datasets: dataset,
+            };
           });
-          }
-          setNewChartData(transformedData);
+        }
+        setNewChartData(transformedData);
         // Set the chart data state
         setChartData(datasets);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -93,13 +96,17 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(process.env.REACT_APP_BACKEND_URL+'trips');
+        const response = await fetch(
+          process.env.REACT_APP_BACKEND_URL + "trips"
+        );
         const jsonData = await response.json();
         // console.log("jsonData",jsonData);
         setTrips(jsonData[0].TRIPS);
         setTripsChange(jsonData[0].LASTMONTHPERTRIPS);
 
-        const response2 = await fetch(process.env.REACT_APP_BACKEND_URL+'miles');
+        const response2 = await fetch(
+          process.env.REACT_APP_BACKEND_URL + "miles"
+        );
         const jsonData2 = await response2.json();
         // console.log("jsonData2",jsonData2);
         setMilesDriven(jsonData2[0].TODAYMILES);
@@ -111,48 +118,47 @@ function Dashboard() {
         // setRevenue(jsonData3[0].REVENUE);
         // setRevenueChange(jsonData3[0].LASTMONTHPERREVENUE);
 
-        const response4 = await fetch(process.env.REACT_APP_BACKEND_URL+'efficiency');
+        const response4 = await fetch(
+          process.env.REACT_APP_BACKEND_URL + "efficiency"
+        );
         const jsonData4 = await response4.json();
         // console.log("jsonData4",jsonData4);
         setPoints(jsonData4[0].CARBONPOINTS);
         setEfficiency(parseFloat(jsonData4[0].MEANEFFICIENCY).toPrecision(2));
-
-
-      }
-      catch (error) {
-        console.error('Error fetching data:', error);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     };
-    fetchData()
+    fetchData();
   }, []);
 
   const extractChartDatasets = (jsonData) => {
     const parameters = [
-      'ENGINE_COOLANT_TEMP',
-      'ENGINE_LOAD',
-      'ENGINE_RPM',
-      'AIR_INTAKE_TEMP',
-      'SPEED',
-      'THROTTLE_POS',
-      'EFFICIENCY'
+      "ENGINE_COOLANT_TEMP",
+      "ENGINE_LOAD",
+      "ENGINE_RPM",
+      "AIR_INTAKE_TEMP",
+      "SPEED",
+      "THROTTLE_POS",
+      "EFFICIENCY",
     ];
 
     const datasets = {};
-    let i =0
-    parameters.forEach(param => {
+    let i = 0;
+    parameters.forEach((param) => {
       datasets[param] = {
         label: param,
-        data: jsonData.map((data => {
+        data: jsonData.map((data) => {
           // i++;
           // if(i%80==0)
-          return data[param]
-        })),
+          return data[param];
+        }),
         fill: true,
         borderColor: getRandomColor(), // Generate a random color for each chart
-        tension: 0.4
+        tension: 0.4,
       };
     });
-    console.log("parameters",datasets);
+    console.log("parameters", datasets);
     return datasets;
   };
 
@@ -163,181 +169,180 @@ function Dashboard() {
     return `rgb(${r}, ${g}, ${b})`;
   };
 
-
   return (
     <DashboardLayout>
       <DashboardNavbar />
-     {chartData && newChartData &&  <MDBox py={3}>
-        <Grid container spacing={1}>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="dark"
-                icon="drive_eta"
-                title="Trips"
-                count={trips}
-                percentage={{
-                  color: "error",
-                  amount: `-${tripsChange}%`,
-                  label: "than last month",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Month's Miles Driven"
-                count={milesDriven}
-                percentage={{
-                  color: "success",
-                  amount: `+${milesDrivenChange}%`,
-                  label: "than last month",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="local_gas_station"
-                title="Efficiency"
-                count={efficiency}
-                percentage={{
-                  color: "success",
-                  amount: `+0.9%`,
-                  label: "than last month",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="warning"
-                icon="token"
-                title="Carbon Points"
-                count={points}
-                percentage={{
-                  color: "warning",
-                  amount: `-0.2%`,
-                  label: "than last month",
-                }}
-              />
-            </MDBox>
-          </Grid>
-        </Grid>
-
-        <MDBox mt={1.5}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={3} lg={3}>
-              <Typography variant="h4">Days: {numberOfDays}</Typography>
-
-</Grid>
-<Grid item xs={12} md={9} lg={9}>
-          <Slider
-            defaultValue={30}
-            getAriaValueText={valuetext}
-            aria-labelledby="discrete-slider"
-            valueLabelDisplay="auto"
-            step={1}
-            marks
-            min={1}
-            max={365}
-            onChange={(e, value) => setNumberOfDays(value)}
-            sx={{ width: 400, margin: 'auto' }}
-          />
-          </Grid>
-          </Grid>
-          </MDBox>
-        <MDBox mt={4.5}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={12} lg={12}>
-              <MDBox mb={3}>
-                <ReportsLineChart
+      {chartData && newChartData && (
+        <MDBox py={3}>
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
                   color="dark"
-                  title="Efficiency"
-                  description="Efficiency stats for last month."
-                  date="updated 1hr ago"
-                  chart={newChartData['EFFICIENCY']}
+                  icon="drive_eta"
+                  title="Trips"
+                  count={trips}
+                  percentage={{
+                    color: "error",
+                    amount: `-${tripsChange}%`,
+                    label: "than last month",
+                  }}
                 />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="info"
-                  title="Speed"
-                  description="Speed stats for last month."
-                  date="updated 2hr ago"
-                  chart={newChartData['SPEED']}
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  icon="leaderboard"
+                  title="Month's Miles Driven"
+                  count={`${milesDriven} miles`}
+                  percentage={{
+                    color: "success",
+                    amount: `+${milesDrivenChange}%`,
+                    label: "than last month",
+                  }}
                 />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="warning"
-                  title="RPM"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in RPM stats.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={newChartData['ENGINE_RPM']}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="primary"
-                  title="Air Intake Temperature"
-                  description="Air Intake Temp. from last month."
-                  date="just updated"
-                  chart={newChartData['AIR_INTAKE_TEMP']}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="Engine Coolant Temperature"
-                  description="Engine Coolant Temp in Fahrenheit."
-                  date="updated 5 mins ago"
-                  chart={newChartData['ENGINE_COOLANT_TEMP']}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <MDBox mb={3}>
-                <ReportsLineChart
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
                   color="success"
-                  title="Engine Load"
-                  description="Engine Load stats for last month."
-                  date="updated 2 hrs ago"
-                  chart={newChartData['ENGINE_LOAD']}
+                  icon="local_gas_station"
+                  title="Efficiency"
+                  count={`${efficiency}%`}
+                  percentage={{
+                    color: "success",
+                    amount: `+0.9%`,
+                    label: "than last month",
+                  }}
                 />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="info"
-                  title="Throttle Position"
-                  description="Throttle Position stats for last month."
-                  date="updated just now"
-                  chart={newChartData['THROTTLE_POS']}
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="warning"
+                  icon="token"
+                  title="Carbon Points"
+                  count={points}
+                  percentage={{
+                    color: "warning",
+                    amount: `-0.2%`,
+                    label: "than last month",
+                  }}
                 />
               </MDBox>
             </Grid>
           </Grid>
-        </MDBox>
-        {/* <MDBox>
+
+          <MDBox mt={1.5}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={3} lg={3}>
+                <Typography variant="h4">Days: {numberOfDays}</Typography>
+              </Grid>
+              <Grid item xs={12} md={9} lg={9}>
+                <Slider
+                  defaultValue={30}
+                  getAriaValueText={valuetext}
+                  aria-labelledby="discrete-slider"
+                  valueLabelDisplay="auto"
+                  step={1}
+                  marks
+                  min={1}
+                  max={365}
+                  onChange={(e, value) => setNumberOfDays(value)}
+                  sx={{ width: 400, margin: "auto" }}
+                />
+              </Grid>
+            </Grid>
+          </MDBox>
+          <MDBox mt={4.5}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={12} lg={12}>
+                <MDBox mb={3}>
+                  <ReportsLineChart
+                    color="dark"
+                    title="Efficiency"
+                    description="Efficiency stats for last month."
+                    date="updated 1hr ago"
+                    chart={newChartData["EFFICIENCY"]}
+                  />
+                </MDBox>
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <MDBox mb={3}>
+                  <ReportsLineChart
+                    color="info"
+                    title="Speed (in mph)"
+                    description="Speed stats for last month."
+                    date="updated 2hr ago"
+                    chart={newChartData["SPEED"]}
+                  />
+                </MDBox>
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <MDBox mb={3}>
+                  <ReportsLineChart
+                    color="warning"
+                    title="RPM"
+                    description={
+                      <>
+                        (<strong>+15%</strong>) increase in RPM stats.
+                      </>
+                    }
+                    date="updated 4 min ago"
+                    chart={newChartData["ENGINE_RPM"]}
+                  />
+                </MDBox>
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <MDBox mb={3}>
+                  <ReportsLineChart
+                    color="primary"
+                    title="Air Intake Temperature (F)"
+                    description="Air Intake Temp. from last month."
+                    date="just updated"
+                    chart={newChartData["AIR_INTAKE_TEMP"]}
+                  />
+                </MDBox>
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <MDBox mb={3}>
+                  <ReportsLineChart
+                    color="dark"
+                    title="Engine Coolant Temperature (F)"
+                    description="Engine Coolant Temp in Fahrenheit."
+                    date="updated 5 mins ago"
+                    chart={newChartData["ENGINE_COOLANT_TEMP"]}
+                  />
+                </MDBox>
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <MDBox mb={3}>
+                  <ReportsLineChart
+                    color="success"
+                    title="Engine Load (%)"
+                    description="Engine Load stats for last month."
+                    date="updated 2 hrs ago"
+                    chart={newChartData["ENGINE_LOAD"]}
+                  />
+                </MDBox>
+              </Grid>
+              <Grid item xs={12} md={6} lg={6}>
+                <MDBox mb={3}>
+                  <ReportsLineChart
+                    color="info"
+                    title="Throttle Position"
+                    description="Throttle Position stats for last month."
+                    date="updated just now"
+                    chart={newChartData["THROTTLE_POS"]}
+                  />
+                </MDBox>
+              </Grid>
+            </Grid>
+          </MDBox>
+          {/* <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={8}>
               <Projects />
@@ -347,7 +352,8 @@ function Dashboard() {
             </Grid>
           </Grid>
         </MDBox> */}
-      </MDBox>}
+        </MDBox>
+      )}
       {/* {chartData ? (
         Object.keys(chartData).map((param, index) => (
           <div key={index} style={{ marginBottom: '20px' }}>
