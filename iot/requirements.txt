@@ -1,0 +1,2 @@
+obd==0.7.1
+AWSIoTPythonSDK==1.4.9s
