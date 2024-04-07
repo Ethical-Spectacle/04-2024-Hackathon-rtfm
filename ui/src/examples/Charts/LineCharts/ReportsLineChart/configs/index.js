@@ -20,8 +20,8 @@ function configs(labels, datasets) {
       datasets: [
         {
           label: datasets.label,
-          tension: 0,
-          pointRadius: 5,
+          tension: 0.4,
+          pointRadius: 3,
           pointBorderColor: "transparent",
           pointBackgroundColor: "rgba(255, 255, 255, .8)",
           borderColor: "rgba(255, 255, 255, .8)",

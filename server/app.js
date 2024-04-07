@@ -2,7 +2,7 @@ const express = require('express');
 const { MongoClient } = require('mongodb');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // MongoDB Atlas connection URI (replace with your connection string)
 const uri = 'mongodb+srv://hackrtfm:YPpEK604DLIfIb1o@cluster0.lame0pq.mongodb.net/';

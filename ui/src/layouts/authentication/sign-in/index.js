@@ -48,7 +48,7 @@ function Basic() {
 
   return (
     <BasicLayout>
-      {/* <Card> */}
+      <Card>
         <MDBox
           variant="gradient"
           bgColor="info"
@@ -123,7 +123,7 @@ function Basic() {
             </MDBox>
           </MDBox>
         </MDBox> */}
-      {/* </Card> */}
+      </Card>
     </BasicLayout>
   );
 }
