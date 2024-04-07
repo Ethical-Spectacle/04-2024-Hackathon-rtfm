@@ -1,13 +1,16 @@
 from flask import Flask, jsonify
 from pymongo import MongoClient
 from flask_cors import CORS
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 app = Flask(__name__)
 
 CORS(app)
 # Setup MongoDB connection
 # Replace 'my_mongo_uri' with your actual MongoDB URI and 'mydatabase' with your database name
-client = MongoClient('mongodb+srv://vjk2018:hackrtfm@cluster0.wcypreo.mongodb.net/')
+client = MongoClient(os.getenv('MONGO_URI'))
 
 @app.route('/get_data/<int:Number>', methods=['GET'])
 def get_data(Number):
@@ -24,5 +27,7 @@ def get_data(Number):
     # Return the data as JSON
     return jsonify(data)
 
+port = int(os.getenv('PORT', 5000)) 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=port)
