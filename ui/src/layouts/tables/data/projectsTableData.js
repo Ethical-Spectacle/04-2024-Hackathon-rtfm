@@ -12,27 +12,35 @@ import MDAvatar from "components/MDAvatar";
 import MDProgress from "components/MDProgress";
 
 // Images
+import Avatar from "assets/images/small-logos/avatar.svg";
+import GoldMedal from "assets/images/small-logos/gold-medal.svg";
+import SilverMedal from "assets/images/small-logos/silver-medal.svg";
+import BronzeMedal from "assets/images/small-logos/bronze-medal.svg";
 import LogoAsana from "assets/images/small-logos/logo-asana.svg";
-import logoGithub from "assets/images/small-logos/github.svg";
-import logoAtlassian from "assets/images/small-logos/logo-atlassian.svg";
-import logoSlack from "assets/images/small-logos/logo-slack.svg";
-import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
-import logoInvesion from "assets/images/small-logos/logo-invision.svg";
 
 export default function data() {
   const Project = ({ image, name }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
-      <MDAvatar src={image} name={name} size="sm" variant="rounded" />
-      <MDTypography display="block" variant="button" fontWeight="medium" ml={1} lineHeight={1}>
+      {(name != "Gary" || name != "Sahu" || name != "Jenny") &&<MDAvatar src={Avatar} name={name} size="sm" variant="rounded" />}
+      <MDTypography display="block" fontWeight="medium" ml={1} lineHeight={1}>
         {name}
       </MDTypography>
+      {name === "Gary" && (
+        <MDAvatar src={GoldMedal} name={name} size="sm" variant="rounded" />
+      )}
+      {name === "Sahu" && (
+        <MDAvatar src={SilverMedal} name={name} size="sm" variant="rounded" />
+      )}
+      {name === "Jenny" && (
+        <MDAvatar src={BronzeMedal} name={name} size="sm" variant="rounded" />
+      )}
     </MDBox>
   );
 
-  const Progress = ({ color, value }) => (
+  const Progress = ({ color, value, points }) => (
     <MDBox display="flex" alignItems="center">
       <MDTypography variant="caption" color="text" fontWeight="medium">
-        {value}%
+        {points} points
       </MDTypography>
       <MDBox ml={0.5} width="9rem">
         <MDProgress variant="gradient" color={color} value={value} />
@@ -42,127 +50,121 @@ export default function data() {
 
   return {
     columns: [
-      { Header: "project", accessor: "project", width: "30%", align: "left" },
-      { Header: "budget", accessor: "budget", align: "left" },
-      { Header: "status", accessor: "status", align: "center" },
-      { Header: "completion", accessor: "completion", align: "center" },
-      { Header: "action", accessor: "action", align: "center" },
+      { Header: "Driver", accessor: "user", width: "30%", align: "left" },
+      { Header: "trips", accessor: "trips", align: "center" },
+      { Header: "amount saved", accessor: "amount_saved", align: "left" },
+      { Header: "carbon points", accessor: "completion", align: "center" },
+      // { Header: "action", accessor: "action", align: "center" },
     ],
 
     rows: [
       {
-        project: <Project image={LogoAsana} name="Asana" />,
-        budget: (
-          <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-            $2,500
+        user: <Project image={LogoAsana} name="Gary" />,
+        trips: (<MDTypography color="text" fontWeight="medium">
+        12
+      </MDTypography>),
+        amount_saved: (
+          <MDTypography color="text" fontWeight="medium">
+            $833
           </MDTypography>
         ),
-        status: (
-          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            working
-          </MDTypography>
-        ),
-        completion: <Progress color="info" value={60} />,
-        action: (
-          <MDTypography component="a" href="#" color="text">
-            <Icon>more_vert</Icon>
-          </MDTypography>
-        ),
+        completion: <Progress color="success" value={91} points={987} />,
       },
       {
-        project: <Project image={logoGithub} name="Github" />,
-        budget: (
-          <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-            $5,000
+        user: <Project image={LogoAsana} name="Sahu" />,
+        trips: (<MDTypography color="text" fontWeight="medium">
+        12
+      </MDTypography>),
+        amount_saved: (
+          <MDTypography color="text" fontWeight="medium">
+            $787
           </MDTypography>
         ),
-        status: (
-          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            done
-          </MDTypography>
-        ),
-        completion: <Progress color="success" value={100} />,
-        action: (
-          <MDTypography component="a" href="#" color="text">
-            <Icon>more_vert</Icon>
-          </MDTypography>
-        ),
+        completion: <Progress color="success" value={89} points={901} />,
       },
       {
-        project: <Project image={logoAtlassian} name="Atlassian" />,
-        budget: (
-          <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-            $3,400
+        user: <Project image={LogoAsana} name="Jenny" />,
+        trips: (<MDTypography color="text" fontWeight="medium">
+        12
+      </MDTypography>),
+        amount_saved: (
+          <MDTypography color="text" fontWeight="medium">
+            $700
           </MDTypography>
         ),
-        status: (
-          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            canceled
-          </MDTypography>
-        ),
-        completion: <Progress color="error" value={30} />,
-        action: (
-          <MDTypography component="a" href="#" color="text">
-            <Icon>more_vert</Icon>
-          </MDTypography>
-        ),
+        completion: <Progress color="info" value={85} points={876} />,
       },
       {
-        project: <Project image={logoSpotify} name="Spotify" />,
-        budget: (
-          <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-            $14,000
+        user: <Project image={LogoAsana} name="Sara" />,
+        trips: (<MDTypography color="text" fontWeight="medium">
+        11
+      </MDTypography>),
+        amount_saved: (
+          <MDTypography color="text" fontWeight="medium">
+            $600
           </MDTypography>
         ),
-        status: (
-          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            working
-          </MDTypography>
-        ),
-        completion: <Progress color="info" value={80} />,
-        action: (
-          <MDTypography component="a" href="#" color="text">
-            <Icon>more_vert</Icon>
-          </MDTypography>
-        ),
+        completion: <Progress color="info" value={80} points={789} />,
       },
       {
-        project: <Project image={logoSlack} name="Slack" />,
-        budget: (
-          <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-            $1,000
+        user: <Project image={LogoAsana} name="John" />,
+        trips: (<MDTypography color="text" fontWeight="medium">
+        10
+      </MDTypography>),
+        amount_saved: (
+          <MDTypography color="text" fontWeight="medium">
+            $500
           </MDTypography>
         ),
-        status: (
-          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            canceled
-          </MDTypography>
-        ),
-        completion: <Progress color="error" value={0} />,
-        action: (
-          <MDTypography component="a" href="#" color="text">
-            <Icon>more_vert</Icon>
-          </MDTypography>
-        ),
+        completion: <Progress color="info" value={75} points={701} />,
       },
       {
-        project: <Project image={logoInvesion} name="Invesion" />,
-        budget: (
-          <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
-            $2,300
+        user: <Project image={LogoAsana} name="Mike" />,
+        trips: (<MDTypography color="text" fontWeight="medium">
+        11
+      </MDTypography>),
+        amount_saved: (
+          <MDTypography color="text" fontWeight="medium">
+            $400
           </MDTypography>
         ),
-        status: (
-          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            done
+        completion: <Progress color="info" value={70} points={678} />,
+      },
+      {
+        user: <Project image={LogoAsana} name="David" />,
+        trips: (<MDTypography color="text" fontWeight="medium">
+        12
+      </MDTypography>),
+        amount_saved: (
+          <MDTypography color="text" fontWeight="medium">
+            $350
           </MDTypography>
         ),
-        completion: <Progress color="success" value={100} />,
-        action: (
-          <MDTypography component="a" href="#" color="text">
-            <Icon>more_vert</Icon>
+        completion: <Progress color="warning" value={65} points={601} />,
+      },
+      {
+        user: <Project image={LogoAsana} name="Sandra" />,
+        trips: (<MDTypography color="text" fontWeight="medium">
+        8
+      </MDTypography>),
+        amount_saved: (
+          <MDTypography color="text" fontWeight="medium">
+            $320
           </MDTypography>
         ),
+        completion: <Progress color="warning" value={60} points={567} />,
+      },
+      {
+        user: <Project image={LogoAsana} name="Laura" />,
+        trips: (<MDTypography color="text" fontWeight="medium">
+        7
+      </MDTypography>),
+        amount_saved: (
+          <MDTypography color="text" fontWeight="medium">
+            $300
+          </MDTypography>
+        ),
+        completion: <Progress color="error" value={44} points={389} />,
       },
     ],
   };

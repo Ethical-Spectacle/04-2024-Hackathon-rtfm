@@ -48,16 +48,19 @@ function Basic() {
 
   return (
     <BasicLayout>
+        <MDTypography variant="h2" fontWeight="medium" textAlign="center" mt={2} mb={5}>
+          Welcome to EcoConvoy
+        </MDTypography>
       <Card>
         <MDBox
           variant="gradient"
           bgColor="info"
           borderRadius="lg"
           coloredShadow="info"
-          mx={2}
-          mt={-3}
+          // mx={2}
+          // mt={1}
           p={2}
-          mb={1}
+          // mb={1}
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>

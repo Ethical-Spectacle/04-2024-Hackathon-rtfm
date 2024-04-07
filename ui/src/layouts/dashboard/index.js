@@ -5,7 +5,6 @@ import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-import Button from "@mui/material/Button";
 import Slider from "@mui/material/Slider";
 // import { Line } from 'react-chartjs-2';
 
@@ -33,29 +32,21 @@ function Dashboard() {
   const [chartData, setChartData] = useState(null);
   const [newChartData, setNewChartData] = useState();
   const [numberOfDays, setNumberOfDays] = useState(30);
-  const [btnText, setBtnText] = useState('Show Last Years Data');
-
-  const handleOnClickBtn = () => {
-    if (numberOfDays === 30) {
-      setNumberOfDays(365);
-      setBtnText('Show Last 30 Days Data');
-    } else {
-      setNumberOfDays(30);
-      setBtnText('Show Last Years Data');
-    }
-  }
+  const [trips, setTrips] = useState(0);
+  const [tripsChange, setTripsChange] = useState(0);
+  const [milesDriven, setMilesDriven] = useState(0);
+  const [milesDrivenChange, setMilesDrivenChange] = useState(0);
+  const [efficiency, setEfficiency] = useState(0);
+  const [points, setPoints] = useState(0);
 
   function valuetext(value) {
     return `${value} days`;
   }
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
-        // Simulated fetch of your JSON data
-        // TODO: FIXME: Replace this with your actual API endpoint
-        const response = await fetch('http://127.0.0.1:5000/get_data/'+numberOfDays);
+        const response = await fetch(process.env.REACT_APP_BACKEND_URL+'get_data/'+numberOfDays);
         const jsonData = await response.json();
 
         // Extract chart datasets for all available parameters
@@ -73,7 +64,7 @@ function Dashboard() {
         const transformedData = {}
         for(let i=0;i<parameters.length;i++){
           Object.keys(datasets).forEach(param => {
-            console.log("param",param);
+            // console.log("param",param);
             const label = param
             const data = datasets[param].data;
             // console.log("data",data);
@@ -99,6 +90,42 @@ function Dashboard() {
     fetchData();
   }, [numberOfDays]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(process.env.REACT_APP_BACKEND_URL+'trips');
+        const jsonData = await response.json();
+        // console.log("jsonData",jsonData);
+        setTrips(jsonData[0].TRIPS);
+        setTripsChange(jsonData[0].LASTMONTHPERTRIPS);
+
+        const response2 = await fetch(process.env.REACT_APP_BACKEND_URL+'miles');
+        const jsonData2 = await response2.json();
+        // console.log("jsonData2",jsonData2);
+        setMilesDriven(jsonData2[0].TODAYMILES);
+        setMilesDrivenChange(jsonData2[0].LASTMONTHMILES);
+
+        // const response3 = await fetch(process.env.REACT_APP_BACKEND_URL+'revenue');
+        // const jsonData3 = await response3.json();
+        // // console.log("jsonData3",jsonData3);
+        // setRevenue(jsonData3[0].REVENUE);
+        // setRevenueChange(jsonData3[0].LASTMONTHPERREVENUE);
+
+        const response4 = await fetch(process.env.REACT_APP_BACKEND_URL+'efficiency');
+        const jsonData4 = await response4.json();
+        // console.log("jsonData4",jsonData4);
+        setPoints(jsonData4[0].CARBONPOINTS);
+        setEfficiency(parseFloat(jsonData4[0].MEANEFFICIENCY).toPrecision(2));
+
+
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData()
+  }, []);
+
   const extractChartDatasets = (jsonData) => {
     const parameters = [
       'ENGINE_COOLANT_TEMP',
@@ -108,12 +135,10 @@ function Dashboard() {
       'SPEED',
       'THROTTLE_POS',
       'EFFICIENCY'
-      // Add more parameters as needed
     ];
 
     const datasets = {};
     let i =0
-    // Initialize datasets for each parameter
     parameters.forEach(param => {
       datasets[param] = {
         label: param,
@@ -143,18 +168,18 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
      {chartData && newChartData &&  <MDBox py={3}>
-        <Grid container spacing={3}>
+        <Grid container spacing={1}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
-                icon="weekend"
+                icon="drive_eta"
                 title="Trips"
-                count={281}
+                count={trips}
                 percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
+                  color: "error",
+                  amount: `-${tripsChange}%`,
+                  label: "than last month",
                 }}
               />
             </MDBox>
@@ -163,11 +188,11 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 icon="leaderboard"
-                title="Today's Miles Driven"
-                count="2,300"
+                title="Month's Miles Driven"
+                count={milesDriven}
                 percentage={{
                   color: "success",
-                  amount: "+3%",
+                  amount: `+${milesDrivenChange}%`,
                   label: "than last month",
                 }}
               />
@@ -177,29 +202,28 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="success"
-                icon="trending_up"
-                title="Revenue"
-                count="34k"
+                icon="local_gas_station"
+                title="Efficiency"
+                count={efficiency}
                 percentage={{
                   color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
+                  amount: `+0.9%`,
+                  label: "than last month",
                 }}
               />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              {/* <Button variant="contained" color="primary" onClick={handleOnClickBtn}>{btnText}</Button> */}
               <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title="Load Delivered"
-                count="1000 Tons"
+                color="warning"
+                icon="token"
+                title="Carbon Points"
+                count={points}
                 percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
+                  color: "warning",
+                  amount: `-0.2%`,
+                  label: "than last month",
                 }}
               />
             </MDBox>
