@@ -28,6 +28,7 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import image from "assets/images/1713680.webp";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
@@ -46,6 +47,7 @@ function Basic() {
 
   return (
     <BasicLayout>
+      <img src={image} style={{ marginLeft: "80px" }} />
       <MDTypography
         variant="h2"
         fontWeight="medium"
